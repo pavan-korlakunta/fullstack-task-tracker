@@ -1,0 +1,51 @@
+name: Frontend CI/CD
+
+# When to run this workflow
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - 'client/**'
+  pull_request:
+    branches: [ main ]
+    paths:
+      - 'client/**'
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    
+    steps:
+    # Step 1: Checkout code
+    - name: Checkout code
+      uses: actions/checkout@v3
+    
+    # Step 2: Setup Node.js
+    - name: Setup Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '20'
+    
+    # Step 3: Install dependencies
+    - name: Install dependencies
+      working-directory: ./client
+      run: npm install
+    
+    # Step 4: Build the React app
+    - name: Build React app
+      working-directory: ./client
+      run: npm run build
+    
+    # Step 5: Run tests (we'll add tests later)
+    - name: Run tests
+      working-directory: ./client
+      run: echo "Tests would run here"
+    
+    # Step 6: Build Docker image
+    - name: Build Docker image
+      working-directory: ./client
+      run: docker build -t task-tracker-frontend:${{ github.sha }} .
+    
+    # Step 7: Success message
+    - name: CI Success
+      run: echo "✅ Frontend CI passed successfully!"
