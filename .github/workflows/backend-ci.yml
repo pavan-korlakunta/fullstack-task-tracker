@@ -1,0 +1,46 @@
+name: Backend CI/CD
+
+# When to run this workflow
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - 'server/**'
+  pull_request:
+    branches: [ main ]
+    paths:
+      - 'server/**'
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    
+    steps:
+    # Step 1: Checkout code
+    - name: Checkout code
+      uses: actions/checkout@v3
+    
+    # Step 2: Setup Node.js
+    - name: Setup Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '20'
+    
+    # Step 3: Install dependencies
+    - name: Install dependencies
+      working-directory: ./server
+      run: npm install
+    
+    # Step 4: Run tests (we'll add tests later)
+    - name: Run tests
+      working-directory: ./server
+      run: echo "Tests would run here"
+    
+    # Step 5: Build Docker image
+    - name: Build Docker image
+      working-directory: ./server
+      run: docker build -t task-tracker-backend:${{ github.sha }} .
+    
+    # Step 6: Success message
+    - name: CI Success
+      run: echo "✅ Backend CI passed successfully!"
