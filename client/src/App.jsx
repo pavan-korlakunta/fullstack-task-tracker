@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react'
 import './App.css'
 
+const API_URL = 'https://fullstack-task-tracker-ftuc.onrender.com'
+
 function App() {
   const [tasks, setTasks] = useState([])
   const [title, setTitle] = useState('')
@@ -14,7 +16,7 @@ function App() {
 
   const fetchTasks = async () => {
     try {
-      const response = await fetch('http://localhost:5000/api/tasks')
+      const response = await fetch(`${API_URL}/api/tasks`)
       const data = await response.json()
       setTasks(data)
       setLoading(false)
@@ -30,7 +32,7 @@ function App() {
     if (!title.trim()) return
 
     try {
-      const response = await fetch('http://localhost:5000/api/tasks', {
+      const response = await fetch(`${API_URL}/api/tasks`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ title, description })
@@ -47,7 +49,7 @@ function App() {
   // Delete task
   const deleteTask = async (id) => {
     try {
-      await fetch(`http://localhost:5000/api/tasks/${id}`, {
+      await fetch(`${API_URL}/api/tasks/${id}`, {
         method: 'DELETE'
       })
       setTasks(tasks.filter(task => task.id !== id))
@@ -59,7 +61,7 @@ function App() {
   // Toggle task completion
   const toggleTask = async (id) => {
     try {
-      const response = await fetch(`http://localhost:5000/api/tasks/${id}`, {
+      const response = await fetch(`${API_URL}/api/tasks/${id}`, {
         method: 'PATCH'
       })
       const updatedTask = await response.json()
